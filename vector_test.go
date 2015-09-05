@@ -111,3 +111,49 @@ func TestVectorUnit(t *testing.T) {
 	}
 	t.Log(v, "Unit() = ", v.Unit())
 }
+
+func TestVectorDotProd(t *testing.T) {
+	v1 := New(7.887, 4.138)
+	v2 := New(-8.802, 6.776)
+	actual := v1.DotProd(v2)
+	expect := v1[0]*v2[0] + v1[1]*v2[1]
+	if actual != expect {
+		t.Logf("DotPoduct failed, expecting %d, got %d", expect, actual)
+		t.Fail()
+	}
+	t.Log(v1, "DotProd", v2, "=", actual)
+
+	v1 = New(-5.955, -4.904, -1.874)
+	v2 = New(-4.496, -8.775, 7.103)
+	actual = v1.DotProd(v2)
+	expect = v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2]
+	if actual != expect {
+		t.Logf("DotProdcut failed, expecting %d, got %d", expect, actual)
+		t.Fail()
+	}
+
+	t.Log(v1, "DotProd", v2, "=", actual)
+}
+
+func TestVectorAngle(t *testing.T) {
+	v1 := New(3.183, -7.627)
+	v2 := New(-2.668, 5.319)
+	actual := v1.Angle(v2)
+	expect := math.Acos(v1.DotProd(v2) / (v1.Mag() * v2.Mag()))
+	if actual != expect {
+		t.Logf("Vector angle failed, expecting %d, got %d", expect, actual)
+		t.Fail()
+	}
+	t.Log("Angle between", v1, "and", v2, "=", actual)
+
+	v1 = New(7.35, 0.221, 5.188)
+	v2 = New(2.751, 8.259, 3.985)
+	actual = v1.Angle(v2)
+	expect = math.Acos(v1.DotProd(v2) / (v1.Mag() * v2.Mag()))
+	if actual != expect {
+		t.Logf("Vector angle failed, exepcting %d, got %d", expect, actual)
+		t.Fail()
+	}
+
+	t.Log("Angle between", v1, "and", v2, "=", actual)
+}

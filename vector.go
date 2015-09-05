@@ -84,3 +84,15 @@ func (v Vector) Unit() (result Vector) {
 	result.ScalarMul(1 / mag)
 	return
 }
+
+func (v Vector) DotProd(other Vector) (result float64) {
+	v.assertLenMatch(other)
+	for i, val := range v {
+		result += val * other[i]
+	}
+	return
+}
+
+func (v Vector) Angle(other Vector) float64 {
+	return math.Acos(v.DotProd(other) / (v.Mag() * other.Mag()))
+}
