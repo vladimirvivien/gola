@@ -2,6 +2,7 @@ package gola
 
 import (
 	"bytes"
+	"math"
 	"strconv"
 )
 
@@ -15,6 +16,12 @@ func (v Vector) assertLenMatch(other Vector) {
 	if len(v) != len(other) {
 		panic("Vector length mismatch")
 	}
+}
+
+func (v Vector) Copy() (result Vector) {
+	result = make([]float64, len(v))
+	copy(result, v)
+	return
 }
 
 func (v Vector) String() string {
@@ -57,9 +64,23 @@ func (v Vector) Sub(other Vector) (result Vector) {
 	return
 }
 
-func (v Vector) Scale(scale float64) {
+func (v Vector) ScalarMul(scale float64) {
 	for i := range v {
 		v[i] = v[i] * scale
 	}
+}
+
+func (v Vector) Mag() (result float64) {
+	for _, v := range v {
+		result += (v * v)
+	}
+	result = math.Sqrt(result)
+	return
+}
+
+func (v Vector) Unit() (result Vector) {
+	result = v.Copy()
+	mag := result.Mag()
+	result.ScalarMul(1 / mag)
 	return
 }
