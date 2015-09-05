@@ -6,6 +6,11 @@ import (
 	"strconv"
 )
 
+const (
+	zero    = 1.0e-10
+	piOver2 = math.Pi / 2
+)
+
 type Vector []float64
 
 func New(elems ...float64) Vector {
@@ -44,6 +49,10 @@ func (v Vector) Eq(other Vector) bool {
 		}
 	}
 	return true
+}
+
+func (v Vector) IsZero() bool {
+	return v.Mag() <= zero
 }
 
 func (v Vector) Add(other Vector) (result Vector) {
@@ -95,4 +104,19 @@ func (v Vector) DotProd(other Vector) (result float64) {
 
 func (v Vector) Angle(other Vector) float64 {
 	return math.Acos(v.DotProd(other) / (v.Mag() * other.Mag()))
+}
+
+func (v Vector) IsParallel(other Vector) bool {
+	if v.IsZero() || other.IsZero() {
+		return true
+	}
+	return v.Angle(other) == 0 || v.Angle(other) == math.Pi
+}
+
+func (v Vector) IsOrthogonal(other Vector) bool {
+
+	if v.IsZero() || other.IsZero() {
+		return true
+	}
+	return math.Abs(v.DotProd(other)) < zero
 }

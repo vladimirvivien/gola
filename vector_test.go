@@ -157,3 +157,87 @@ func TestVectorAngle(t *testing.T) {
 
 	t.Log("Angle between", v1, "and", v2, "=", actual)
 }
+
+func TestVectorParallel(t *testing.T) {
+	v1 := New(-7.579, -7.88)
+	v2 := New(22.737, 23.64)
+	actual := v1.IsParallel(v2)
+	expect := (v1.Angle(v2) == 0 || v1.Angle(v2) == math.Pi)
+	if actual != expect {
+		t.Logf("Vector parallel failed, expecting %t, got %t", expect, actual)
+		t.Fail()
+	}
+	t.Log(v1, "Parallel to", v2, "is", actual)
+
+	v1 = New(-2.029, 9.97, 4.172)
+	v2 = New(-9.231, -6.639, -7.245)
+	actual = v1.IsParallel(v2)
+	expect = (v1.Angle(v2) == 0 || v1.Angle(v2) == math.Pi)
+	if actual != expect {
+		t.Logf("Vector parallel failed, expecting %t, got %t", expect, actual)
+		t.Fail()
+	}
+	t.Log(v1, "Parallel to", v2, "is", actual)
+
+	v1 = New(-2.238, -7.284, -1.214)
+	v2 = New(-1.821, 1.072, -2.94)
+	actual = v1.IsParallel(v2)
+	expect = (v1.Angle(v2) == 0 || v1.Angle(v2) == math.Pi)
+	if actual != expect {
+		t.Logf("Vector parallel failed, expecting %t, got %t", expect, actual)
+		t.Fail()
+	}
+	t.Log(v1, "Parallel to", v2, "is", actual)
+
+	v1 = New(2.118, 4.827)
+	v2 = New(0, 0)
+	actual = v1.IsParallel(v2)
+	expect = (v1.IsZero() || v2.IsZero() || v1.Angle(v2) == 0 || v1.Angle(v2) == math.Pi)
+	if actual != expect {
+		t.Logf("Vector parallel failed, expecting %t, got %t", expect, actual)
+		t.Fail()
+	}
+	t.Log(v1, "Parallel to", v2, "is", actual)
+}
+
+func TestVectorOrthogonality(t *testing.T) {
+	v1 := New(-7.579, -7.88)
+	v2 := New(22.737, 23.64)
+	actual := v1.IsOrthogonal(v2)
+	expect := (math.Abs(v1.DotProd(v2)) < zero)
+	if actual != expect {
+		t.Logf("Vector orthogonal failed, expecting %t, got %t", expect, actual)
+		t.Fail()
+	}
+	t.Log(v1, "Orthogonal to", v2, "is", actual)
+
+	v1 = New(-2.029, 9.97, 4.172)
+	v2 = New(-9.231, -6.639, -7.245)
+	actual = v1.IsOrthogonal(v2)
+	expect = (math.Abs(v1.DotProd(v2)) < zero)
+	if actual != expect {
+		t.Logf("Vector orthogonal failed, expecting %t, got %t", expect, actual)
+		t.Fail()
+	}
+	t.Log(v1, "Orthogonal to", v2, "is", actual)
+
+	v1 = New(-2.238, -7.284, -1.214)
+	v2 = New(-1.821, 1.072, -2.94)
+	actual = v1.IsOrthogonal(v2)
+	expect = (math.Abs(v1.DotProd(v2)) < zero)
+	if actual != expect {
+		t.Logf("Vector orthogonal, expecting %t, got %t", expect, actual)
+		t.Fail()
+	}
+	t.Log(v1, "Orthogonal to", v2, "is", actual)
+
+	v1 = New(2.118, 4.827)
+	v2 = New(0, 0)
+	actual = v1.IsOrthogonal(v2)
+	expect = (math.Abs(v1.DotProd(v2)) < zero)
+	if actual != expect {
+		t.Logf("Vecto orthogonal failed, expecting %t, got %t", expect, actual)
+		t.Fail()
+	}
+	t.Log(v1, "Orthogonal to", v2, "is", actual)
+}
