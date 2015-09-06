@@ -241,3 +241,74 @@ func TestVectorOrthogonality(t *testing.T) {
 	}
 	t.Log(v1, "Orthogonal to", v2, "is", actual)
 }
+
+func TestVectorProjection(t *testing.T) {
+	v := New(3.039, 1.879)
+	b := New(0.825, 2.036)
+	actual := v.Proj(b)
+	expect := b.Unit()
+	expect.ScalarMul(v.DotProd(expect))
+	if !actual.Eq(expect) {
+		t.Logf("Vector projection failed, expeecting %s, got %s", expect, actual)
+		t.Fail()
+	}
+	t.Log(v, "Proj on", b, "=", actual)
+}
+
+func TestVectorPerp(t *testing.T) {
+	v := New(-9.88, -3.264, -8.159)
+	b := New(-2.155, -9.353, -9.473)
+	actual := v.Perp(b)
+	expect := v.Sub(v.Proj(b))
+	if !actual.Eq(expect) {
+		t.Logf("Vector perp calculation failed, expecting %s, got %v", expect, actual)
+		t.Fail()
+	}
+	t.Log(v, "Perpendicular to", b, "=", actual)
+}
+
+func TestVectorProjectionComponents(t *testing.T) {
+	v := New(3.009, -6.172, 3.692, -2.51)
+	b := New(6.404, -9.144, 2.759, 8.718)
+	projV := v.Proj(b)
+	t.Log(v, "Projection on b =", projV)
+	perpV := v.Perp(b)
+	t.Log(v, "Perpendicular component of b =", perpV)
+}
+
+func TestVectorCrossProduct(t *testing.T) {
+	v := New(8.462, 7.893, -8.187)
+	w := New(6.984, -5.975, 4.778)
+	actual := v.CrossProd(w)
+	expect := New(
+		v[1]*w[2]-w[1]*v[2],
+		-1*(v[0]*w[2]-w[0]*v[2]),
+		v[0]*w[1]-w[0]*v[1],
+	)
+	if !actual.Eq(expect) {
+		t.Logf("Vector cross product failed, expecting %s, got %s", expect, actual)
+		t.Fail()
+	}
+	t.Log(v, "CrossProd", w, "=", actual)
+}
+
+func TestVectorValidateCrossProd(t *testing.T) {
+	v := New(-8.987, -9.838, 5.031)
+	w := New(-4.268, -1.861, -8.866)
+	area := v.CrossProd(w).Mag()
+	expect := New(
+		v[1]*w[2]-w[1]*v[2],
+		-1*(v[0]*w[2]-w[0]*v[2]),
+		v[0]*w[1]-w[0]*v[1],
+	).Mag()
+	if area != expect {
+		t.Logf("CrossProd validation failed, expecting %d, got %d", expect, area)
+		t.Fail()
+	}
+	t.Log(v, "magnitude of cross prod", w, "=", area)
+
+	v = New(1.5, 9.547, 3.691)
+	w = New(-6.007, 0.124, 5.772)
+	triArea := v.CrossProd(w).Mag() * 0.5
+	t.Log(v, "X", w, "triangle Area = ", triArea)
+}
